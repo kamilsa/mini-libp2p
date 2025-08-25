@@ -23,6 +23,7 @@ target_link_libraries(libp2p
     INTERFACE
         p2p_basic_host
         p2p_peer_repository
+        p2p_protocol_ping
         p2p_inmem_address_repository
         p2p_inmem_key_repository
         p2p_read_buffer
