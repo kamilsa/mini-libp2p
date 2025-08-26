@@ -101,12 +101,17 @@ namespace libp2p::transport::lsquic {
         if (op and info.peer_id != op->peer) {
           return security::TlsError::TLS_UNEXPECTED_PEER_ID;
         }
+        const sockaddr *local_sockaddr = nullptr;
+        const sockaddr *peer_sockaddr = nullptr;
+        boost::asio::ip::udp::endpoint peer_endpoint;
+        lsquic_conn_get_sockaddr(conn, &local_sockaddr, &peer_sockaddr);
+        *peer_endpoint.data() = *peer_sockaddr;
         auto conn = std::make_shared<QuicConnection>(
             self->io_context_,
             conn_ctx,
             op.has_value(),
             self->local_,
-            detail::makeQuicAddr(op->remote).value(),
+            detail::makeQuicAddr(peer_endpoint).value(),
             self->local_peer_,
             info.peer_id,
             info.public_key);
