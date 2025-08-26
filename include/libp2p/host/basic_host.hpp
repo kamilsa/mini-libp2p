@@ -226,6 +226,8 @@ namespace libp2p::host {
      */
     event::Bus &getBus();
 
+    StreamProtocols getSupportedProtocols() const;
+
    private:
     std::shared_ptr<peer::IdentityManager> idmgr_;
     std::shared_ptr<network::ListenerManager> listener_;

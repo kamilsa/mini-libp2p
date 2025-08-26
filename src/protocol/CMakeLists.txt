@@ -1,4 +1,5 @@
 add_subdirectory(echo)
+add_subdirectory(identify)
 
 add_library(p2p_protocol_ping
     ping.cpp
