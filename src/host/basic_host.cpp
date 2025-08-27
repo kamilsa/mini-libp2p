@@ -15,11 +15,11 @@ namespace libp2p::host {
 
   BasicHost::BasicHost(
       std::shared_ptr<peer::IdentityManager> idmgr,
-      std::unique_ptr<network::ListenerManager> listener,
-      std::unique_ptr<network::ConnectionManager> connection_manager,
-      std::unique_ptr<network::Dialer> dialer,
-      // std::unique_ptr<network::Network> network,
-      std::unique_ptr<peer::PeerRepository> repo,
+      std::shared_ptr<network::ListenerManager> listener,
+      std::shared_ptr<network::ConnectionManager> connection_manager,
+      std::shared_ptr<network::Dialer> dialer,
+      // std::shared_ptr<network::Network> network,
+      std::shared_ptr<peer::PeerRepository> repo,
       std::shared_ptr<event::Bus> bus,
       std::shared_ptr<network::TransportManager> transport_manager,
       Libp2pClientVersion libp2p_client_version)
@@ -162,6 +162,12 @@ namespace libp2p::host {
     co_return co_await dialer_->newStream(peer_info, std::move(protocols));
   }
 
+  CoroOutcome<std::shared_ptr<connection::Stream>> BasicHost::newStream(
+      std::shared_ptr<connection::CapableConnection> connection,
+      StreamProtocols protocols) {
+    co_return co_await dialer_->newStream(connection, std::move(protocols));
+  }
+
   outcome::result<void> BasicHost::listen(const multi::Multiaddress &ma) {
     return listener_->listen(ma);
   }
@@ -233,4 +239,7 @@ namespace libp2p::host {
     connection_manager_->closeConnectionsToPeer(peer_id);
   }
 
+  StreamProtocols BasicHost::getSupportedProtocols() const {
+    return listener_->getSupportedProtocols();
+  }
 }  // namespace libp2p::host
